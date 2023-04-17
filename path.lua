@@ -104,6 +104,43 @@ local function toGrid(nodes, traversed)
     return grid
 end
 
+local function drawUpTo(t, nodes, traversed)
+    local upToT = {}
+
+    for i = 1, t do
+        table.insert(upToT, traversed[i])
+    end
+
+    local grid = toGrid(nodes, upToT)
+
+    -- draw the grid to console
+    for i = 1, #grid do
+        local line = ""
+        for j = 1, #grid[i] do
+            line = line .. (grid[j][i])
+        end
+        io.write(line .. '\n')
+    end
+end
+
+local function animatedTraverse(traversed, nodes, updateTime)
+    local T = #traversed
+
+    local LINE_UP = '\x1B[F'
+    
+    for t = 1, T do
+        drawUpTo(t, nodes, traversed)
+        io.write("Traversed " .. t .. " nodes\n")
+        io.flush()
+        os.execute("sleep " .. tostring(updateTime))
+        if (t < T) then
+            for _ = 1, #nodes + 1 do
+                io.write(LINE_UP)
+            end
+        end
+    end
+end
+
 -- TODO: Currently simulated by effectively doing a bernoulli trial for each node.
 -- Could instead find a statistical distribution that would instead simulate the length
 -- of one straight segment of the path, and then turn. Likely much faster behavior.
@@ -112,7 +149,8 @@ end
 local api = {
     generateNodes = generateNodes,
     path = path,
-    toGrid = toGrid
+    toGrid = toGrid,
+    animatedTraverse = animatedTraverse,
 }
 
 return api

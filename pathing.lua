@@ -14,6 +14,7 @@ local config = {
     ['--cDecay'] = {'cDecay', 'amount continuation probability decreases on newly branched path', 'number', 0.05},
     ['--bDecay'] = {'bDecay', 'amount branching probability decreases on newly branched path', 'number', 0.01},
     ['--showPlot'] = {'showPlot', 'show the plot of trajectory (final if many)', 'boolean', false},
+    ['--animate'] = {'animate', 'animate the trajectory', 'boolean', false},
 }
 
 local args = argparse.argparse(config)
@@ -63,8 +64,6 @@ local traversed = pathing.path(nodes, edges, args.startx, args.starty, args.star
 -- print out the path
 local grid = pathing.toGrid(nodes, traversed)
 
--- print out the number of nodes traversed
-print(#traversed .. " nodes traversed")
 
 -- print out the grid
 if args.showPlot then
@@ -76,21 +75,11 @@ if args.showPlot then
         end
         print(line)
     end
+
+    -- print number of traversed nodes
+    print("Traversed " .. #traversed .. " nodes")
 end
 
--- count number of overlapping traversed nodes
-local count = 0
-for i = 1, #traversed do
-    local node = traversed[i]
-    for j = i + 1, #traversed do
-        if i ~= j then
-            local other = traversed[j]
-            if node.x == other.x and node.y == other.y then
-                count = count + 1
-            end
-        end
-    end
+if args.animate and not args.showPlot then
+    pathing.animatedTraverse(traversed, nodes, 0.05)
 end
-
--- print out the number of overlapping nodes
-print(count .. " overlapping nodes")
