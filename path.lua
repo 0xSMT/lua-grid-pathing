@@ -79,6 +79,14 @@ end
 
 -- local traversed = path(nodes, edges, 15, 15, {1, 0}, 0.99, 0.3, 0.05, 0.05, 0.01)
 
+local function getUpToT(traversed, t)
+    local upToT = {}
+    for i = 1, t do
+        upToT[i] = traversed[i]
+    end
+    return upToT
+end
+
 -- convert traversed nodes to a 2d array of arrows
 local function toGrid(nodes, traversed)
     local grid = {}
@@ -104,15 +112,19 @@ local function toGrid(nodes, traversed)
     return grid
 end
 
-local function drawUpTo(t, nodes, traversed)
-    local upToT = {}
-
-    for i = 1, t do
-        table.insert(upToT, traversed[i])
+local function countOverlapping(traversed)
+    local count = 0
+    for i = 1, #traversed do
+        for j = i + 1, #traversed do
+            if traversed[i].x == traversed[j].x and traversed[i].y == traversed[j].y then
+                count = count + 1
+            end
+        end
     end
+    return count
+end
 
-    local grid = toGrid(nodes, upToT)
-
+local function drawGrid(grid)
     -- draw the grid to console
     for i = 1, #grid do
         local line = ""
@@ -123,16 +135,25 @@ local function drawUpTo(t, nodes, traversed)
     end
 end
 
+local function sleep(s)
+    local ntime = os.clock() + s
+    repeat until os.clock() > ntime 
+end
+
 local function animatedTraverse(traversed, nodes, updateTime)
     local T = #traversed
 
     local LINE_UP = '\x1B[F'
     
     for t = 1, T do
-        drawUpTo(t, nodes, traversed)
-        io.write("Traversed " .. t .. " nodes\n")
+        local upToT = getUpToT(traversed, t)
+        local grid = toGrid(nodes, upToT)
+
+        drawGrid(grid)
+        local numOverlapping = countOverlapping(upToT)
+        io.write("Traversed " .. t .. " nodes, " .. numOverlapping .. " Overlapping nodes\n")
         io.flush()
-        os.execute("sleep " .. tostring(updateTime))
+        sleep(updateTime)
         if (t < T) then
             for _ = 1, #nodes + 1 do
                 io.write(LINE_UP)
