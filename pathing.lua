@@ -1,4 +1,4 @@
-local argparse = require 'cmdargs'
+local argparse = require 'argparse'
 local pathing = require 'path'
 
 local config = {
