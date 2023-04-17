@@ -1,5 +1,5 @@
 local argparse = require 'cmdargs'
-local pathing = require 'path1'
+local pathing = require 'path'
 
 local config = {
     ['--help'] = {'help', 'show this help message', 'boolean'},
