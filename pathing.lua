@@ -16,7 +16,7 @@ local config = {
     ['--showPlot'] = {'showPlot', 'show the plot of trajectory (final if many)', 'boolean', false},
 }
 
-local args = argparse(config)
+local args = argparse.argparse(config)
 
 -- process arguments
 if args.help then
@@ -82,7 +82,7 @@ end
 local count = 0
 for i = 1, #traversed do
     local node = traversed[i]
-    for j = 1, #traversed do
+    for j = i + 1, #traversed do
         if i ~= j then
             local other = traversed[j]
             if node.x == other.x and node.y == other.y then

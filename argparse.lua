@@ -46,7 +46,11 @@ local function argparse(config)
     return args
 end
 
-return argparse
+local api = {
+    argparse = argparse
+}
+
+return api
 
 -- -- example usage
 -- local config = {
