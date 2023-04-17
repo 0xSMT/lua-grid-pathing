@@ -104,7 +104,11 @@ local function toGrid(nodes, traversed)
     return grid
 end
 
-
+-- TODO: Currently simulated by effectively doing a bernoulli trial for each node.
+-- Could instead find a statistical distribution that would instead simulate the length
+-- of one straight segment of the path, and then turn. Likely much faster behavior.
+-- Would be one for loop iteration per striahgt segment, rather than one per node
+-- (which would mean it would be more performant for paths with long straight segments)
 local api = {
     generateNodes = generateNodes,
     path = path,

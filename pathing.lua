@@ -77,3 +77,20 @@ if args.showPlot then
         print(line)
     end
 end
+
+-- count number of overlapping traversed nodes
+local count = 0
+for i = 1, #traversed do
+    local node = traversed[i]
+    for j = 1, #traversed do
+        if i ~= j then
+            local other = traversed[j]
+            if node.x == other.x and node.y == other.y then
+                count = count + 1
+            end
+        end
+    end
+end
+
+-- print out the number of overlapping nodes
+print(count .. " overlapping nodes")
